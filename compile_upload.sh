@@ -3,7 +3,7 @@ FILENAME=$1         # e.g. main.cpp
 MODE=$2             # compile or upload
 LOGFILE=$3          # output log path
 
-PROJ_DIR="/home/vexserver/vex_project"
+PROJ_DIR="/home/<username>/vex_project"
 SRC_FILE="$PROJ_DIR/src/main.cpp"
 
 echo "[+] Starting $MODE on $FILENAME" > "$LOGFILE"
