@@ -1,4 +1,4 @@
-# 🤖 VEX Remote Code Upload Server (Pi Bridge)
+# VEX Remote Code Upload Server (Pi Bridge)
 
 Remotely upload and execute VEX V5 code from anywhere using a **Raspberry Pi 4** as a secure USB bridge to the VEX Brain. This project sets up a headless Pi server that allows authenticated users to upload `.cpp` files, compile them using PROS, and flash them directly to the brain — all over Wi-Fi! 🛰️
 
