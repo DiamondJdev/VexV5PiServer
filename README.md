@@ -33,6 +33,7 @@ Remotely upload and execute VEX V5 code from anywhere using a **Raspberry Pi 4**
 ## 🔧 Setup Overview
 
 This project installs a **FastAPI Python server** on your Pi, which listens for upload requests and flashes VEX code using PROS. It runs on a port of your choosing (see [Chapter 4](#-installing-the-server)) and uses SSH and HTTPS for encrypted communication.
+> This guide covers a broad, barebones install made to help beginners setup a Raspberry Pi SSH Server and connect to it using RAS Key-pair authentication. 
 
 ---
 
@@ -163,31 +164,129 @@ sudo systemctl start vex-server
 
 ## 📡 Using the Server
 
-### ➕ Upload code:
-```bash
-curl -F 'file=@main.cpp' https://<pi-ip>/upload --insecure
+
+
+
+<details>
+
+<summary>🟩 PowerShell Commands</summary>
+
+
+
+#### 🔼 Upload a Single <code>.cpp</code> File
+
+```powershell
+
+curl.exe -F "file=@main.cpp" https://<pi-ip>:8080/upload --insecure
+
 ```
 
-### ⚙️ Compile:
-```bash
-curl -X POST -H "Content-Type: application/json" \
-  -d '{"filename":"main.cpp"}' \
-  https://<pi-ip>/compile --insecure
+
+
+#### 📁 Upload a <code>.zip</code> Project
+
+```powershell
+
+curl.exe -F "file=@test.zip" https://<pi-ip>:8080/upload_project --insecure
+
 ```
 
-### 🚀 Upload to Brain:
-```bash
-curl -X POST -H "Content-Type: application/json" \
-  -d '{"filename":"main.cpp"}' \
-  https://<pi-ip>/upload_code --insecure
+
+
+#### ⚙️ Compile a <code>.cpp</code> File
+
+```powershell
+
+$headers = @{ "Content-Type" = "application/json" }
+
+$body = '{"filename":"main.cpp"}'
+
+Invoke-RestMethod -Uri https://<pi-ip>:8080/compile -Method POST -Headers $headers -Body $body -SkipCertificateCheck
+
 ```
 
-### 📜 View logs:
-```bash
-curl https://<pi-ip>/logs/<logfile.log> --insecure
+#### 🛠 Compile or Upload a <code>.zip</code> Project
+
+```powershell
+
+$headers = @{ "Content-Type" = "application/json" }
+
+$body = '{"filename":"test.zip","mode":"compile"}'
+
+Invoke-RestMethod -Uri https://<pi-ip>:8080/run -Method POST -Headers $headers -Body $body -SkipCertificateCheck
+
 ```
 
----
+#### 🚀 Upload Code to Brain
+
+```powershell
+
+$headers = @{ "Content-Type" = "application/json" }
+
+$body = '{"filename":"main.cpp"}'
+
+Invoke-RestMethod -Uri https://<pi-ip>:8080/upload_code -Method POST -Headers $headers -Body $body -SkipCertificateCheck
+
+```
+
+> ➡️ **Tip:** Change `"mode":"compile"` to `"upload"` to upload instead.
+
+
+
+#### 📜 View Compilation Logs
+
+```powershell
+
+curl.exe https://<pi-ip>:8080/logs/<logfile.log> --insecure
+
+```
+</details>
+<details>
+<summary>🟦 Command Prompt (CMD) Commands</summary>
+
+#### 🔼 Upload a Single <code>.cpp</code> File
+```cmd
+
+curl -F "file=@main.cpp" https://<pi-ip>:8080/upload --insecure
+
+```
+#### 📁 Upload a <code>.zip</code> Project
+
+```cmd
+
+curl -F "file=@test.zip" https://<pi-ip>:8080/upload_project --insecure
+
+```
+#### ⚙️ Compile a <code>.cpp</code> File
+
+```cmd
+
+curl -X POST -H "Content-Type: application/json" -d "{\"filename\":\"main.cpp\"}" https://<pi-ip>:8080/compile --insecure
+
+```
+#### 🛠 Compile or Upload a <code>.zip</code> Project
+
+```cmd
+
+curl -X POST -H "Content-Type: application/json" -d "{\"filename\":\"test.zip\",\"mode\":\"compile\"}" https://<pi-ip>:8080/run --insecure
+
+```
+#### 🚀 Upload Code to Brain
+
+```cmd
+
+curl -X POST -H "Content-Type: application/json" -d "{\"filename\":\"main.cpp\"}" https://<pi-ip>:8080/upload_code --insecure
+
+```
+> ➡️ **Tip:** Change `"mode":"compile"` to `"upload"` to upload instead.
+#### 📜 View Compilation Logs
+```cmd
+
+curl https://<pi-ip>:8080/logs/<logfile.log> --insecure
+
+```
+</details>
+
 
 ## 🐞 Troubleshooting
 
