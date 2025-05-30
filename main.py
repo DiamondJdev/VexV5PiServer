@@ -1,4 +1,4 @@
-from fastapi import FastAPI, UploadFile, File, HTTPException
+from fastapi import FastAPI, UploadFile, File, HTTPException, Form
 from fastapi.responses import FileResponse, JSONResponse
 from pydantic import BaseModel
 import os, subprocess, uuid, shutil
@@ -63,6 +63,33 @@ def upload_code(req: FileAction):
     log_path = os.path.join(LOG_DIR, f"{log_id}.log")
     subprocess.run(["bash", SCRIPT_PATH, fname, "upload", log_path])
     return {"status": "upload triggered", "log": log_path}
+
+@app.post("/update_file")
+async def update_file(
+    project: str = Form(...),
+    path: str = Form(...),
+    file: UploadFile = File(...)
+):
+    target_dir = os.path.join(COMPILED_DIR, "project", project)
+    if not os.path.isdir(target_dir):
+        raise HTTPException(status_code=404, detail="Project not found")
+
+    target_file = os.path.join(target_dir, path)
+    os.makedirs(os.path.dirname(target_file), exist_ok=True)
+
+    with open(target_file, "wb") as f:
+        f.write(await file.read())
+
+    # Try building with PROS
+    result = subprocess.run(["/home/undeadprogram/server/.venv/bin/pros", "make"], cwd=target_dir, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    build_success = result.returncode == 0
+
+    return {
+        "status": "file uploaded",
+        "path": target_file,
+        "build_success": build_success,
+        "message": "Build failed, please check syntax" if not build_success else "Build succeeded"
+    }
 
 @app.post("/run")
 def run_project(req: ZipAction):

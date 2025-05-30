@@ -1,27 +1,43 @@
 #!/bin/bash
-FILENAME=$1         # e.g. main.cpp
-MODE=$2             # compile or upload
-LOGFILE=$3          # output log path
 
-PROJ_DIR="/home/<username>/vex_project"
-SRC_FILE="$PROJ_DIR/src/main.cpp"
+FILENAME="$1"     # .zip filename from /uploads
+MODE="$2"         # compile or upload
+LOGFILE="$3"      # full path to output log (currently unused)
 
-echo "[+] Starting $MODE on $FILENAME" > "$LOGFILE"
+UPLOAD_DIR="/home/vexbridge/server/uploads"
+COMPILED_DIR="/home/vexbridge/server/compiled"
+PROJECT_DIR="$COMPILED_DIR/project"
+PROS_CMD="/home/undeadprogram/server/.venv/bin/pros"
 
-# Prepare project
-rm -rf "$PROJ_DIR"
-pros conduct new-project "$PROJ_DIR" -l none --force &>> "$LOGFILE"
-cp "uploads/$FILENAME" "$SRC_FILE" &>> "$LOGFILE"
+# mkdir -p "$(dirname "$LOGFILE")"
+# touch "$LOGFILE"
+# echo "[+] Starting $MODE on $FILENAME" >> "$LOGFILE"
 
-cd "$PROJ_DIR" || exit 1
+rm -rf "$PROJECT_DIR"
+mkdir -p "$PROJECT_DIR"
 
-if [ "$MODE" == "compile" ]; then
-    pros make &>> "$LOGFILE"
-elif [ "$MODE" == "upload" ]; then
-    pros upload &>> "$LOGFILE"
-else
-    echo "Unknown mode: $MODE" >> "$LOGFILE"
+if ! unzip "$UPLOAD_DIR/$FILENAME" -d "$PROJECT_DIR"; then
+    # echo "[!] Unzip failed" >> "$LOGFILE"
     exit 1
 fi
 
-echo "[+] $MODE finished." >> "$LOGFILE"
+PROJECT_DIR=$(find "$PROJECT_DIR" -mindepth 1 -maxdepth 1 -type d | sed 's/\r//' | head -n 1)
+
+if [ ! -d "$PROJECT_DIR" ]; then
+        echo "[!] No project directory found inside zip."
+        echo "$Project directory: PROJECT_DIR"
+        exit 1
+fi
+
+cd "$PROJECT_DIR" || exit 1
+
+if [ "$MODE" == "compile" ]; then
+    "$PROS_CMD" make
+elif [ "$MODE" == "upload" ]; then
+    "$PROS_CMD" mu
+else
+    # echo "[!] Unknown mode: $MODE" >> "$LOGFILE"
+    exit 1
+fi
+
+# echo "[+] $MODE finished." >> "$LOGFILE"
