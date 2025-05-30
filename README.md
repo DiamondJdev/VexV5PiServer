@@ -171,30 +171,28 @@ sudo systemctl start vex-server
 
 <summary>🟩 PowerShell Commands</summary>
 
-
-
 #### 🔼 Upload a Single <code>.cpp</code> File
-
 ```powershell
-
 curl.exe -F "file=@main.cpp" https://<pi-ip>:8080/upload --insecure
-
 ```
-
-
-
 #### 📁 Upload a <code>.zip</code> Project
 
 ```powershell
-
 curl.exe -F "file=@test.zip" https://<pi-ip>:8080/upload_project --insecure
-
+```
+#### 🔧 Replace a file in an existing project:
+```powershell
+curl.exe -F "project=VexProject25" -F "path=src/main.cpp" -F "file=@main.cpp" `
+  https://<pi-ip>:8080/update_file --insecure
 ```
 
+- `project`: Name of the existing project directory
+- `path`: Relative path in project to replace (e.g., `src/main.cpp`)
+- `file`: The file to upload and replace
 
+> ℹ️ This triggers a `pros make` build after upload. If it fails, the server still accepts the file, but notifies you that the build failed.
 
 #### ⚙️ Compile a <code>.cpp</code> File
-
 ```powershell
 
 $headers = @{ "Content-Type" = "application/json" }
@@ -204,9 +202,7 @@ $body = '{"filename":"main.cpp"}'
 Invoke-RestMethod -Uri https://<pi-ip>:8080/compile -Method POST -Headers $headers -Body $body -SkipCertificateCheck
 
 ```
-
 #### 🛠 Compile or Upload a <code>.zip</code> Project
-
 ```powershell
 
 $headers = @{ "Content-Type" = "application/json" }
@@ -216,9 +212,7 @@ $body = '{"filename":"test.zip","mode":"compile"}'
 Invoke-RestMethod -Uri https://<pi-ip>:8080/run -Method POST -Headers $headers -Body $body -SkipCertificateCheck
 
 ```
-
 #### 🚀 Upload Code to Brain
-
 ```powershell
 
 $headers = @{ "Content-Type" = "application/json" }
@@ -228,10 +222,7 @@ $body = '{"filename":"main.cpp"}'
 Invoke-RestMethod -Uri https://<pi-ip>:8080/upload_code -Method POST -Headers $headers -Body $body -SkipCertificateCheck
 
 ```
-
 > ➡️ **Tip:** Change `"mode":"compile"` to `"upload"` to upload instead.
-
-
 
 #### 📜 View Compilation Logs
 
@@ -251,39 +242,45 @@ curl -F "file=@main.cpp" https://<pi-ip>:8080/upload --insecure
 
 ```
 #### 📁 Upload a <code>.zip</code> Project
-
 ```cmd
 
 curl -F "file=@test.zip" https://<pi-ip>:8080/upload_project --insecure
+### Replace a file in an existing project:
 
-```
-#### ⚙️ Compile a <code>.cpp</code> File
-
+#### 🔧 Command Prompt
 ```cmd
+curl.exe -F "project=VexProject25" -F "path=src/main.cpp" -F "file=@main.cpp" ^
+  https://<pi-ip>:8080/update_file --insecure
+```
 
+#### 🔧 Replace a file in an existing project:
+```cmd
+curl.exe -F "project=VexProject25" -F "path=src/main.cpp" -F "file=@main.cpp" ^
+  https://<pi-ip>:8080/update_file --insecure
+```
+
+- `project`: Name of the existing project directory
+- `path`: Relative path in project to replace (e.g., `src/main.cpp`)
+- `file`: The file to upload and replace
+
+> ℹ️ This triggers a `pros make` build after upload. If it fails, the server still accepts the file, but notifies you that the build failed.
+
+#### ⚙️ Compile a <code>.cpp</code> File
+```cmd
 curl -X POST -H "Content-Type: application/json" -d "{\"filename\":\"main.cpp\"}" https://<pi-ip>:8080/compile --insecure
-
 ```
 #### 🛠 Compile or Upload a <code>.zip</code> Project
-
 ```cmd
-
 curl -X POST -H "Content-Type: application/json" -d "{\"filename\":\"test.zip\",\"mode\":\"compile\"}" https://<pi-ip>:8080/run --insecure
-
 ```
 #### 🚀 Upload Code to Brain
-
 ```cmd
-
 curl -X POST -H "Content-Type: application/json" -d "{\"filename\":\"main.cpp\"}" https://<pi-ip>:8080/upload_code --insecure
-
 ```
 > ➡️ **Tip:** Change `"mode":"compile"` to `"upload"` to upload instead.
 #### 📜 View Compilation Logs
 ```cmd
-
 curl https://<pi-ip>:8080/logs/<logfile.log> --insecure
-
 ```
 </details>
 
