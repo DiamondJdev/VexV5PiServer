@@ -81,7 +81,7 @@ async def update_file(
         f.write(await file.read())
 
     # Try building with PROS
-    result = subprocess.run(["/home/undeadprogram/server/.venv/bin/pros", "make"], cwd=target_dir, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    result = subprocess.run(["/home/<serverUser>/server/.venv/bin/pros", "make"], cwd=target_dir, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     build_success = result.returncode == 0
 
     return {
