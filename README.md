@@ -141,7 +141,7 @@ Description=Pi Bridge Server
 After=network.target
 
 [Service]
-User=<username>
+User=<serverUser>
 WorkingDirectory=/home/<username>/server
 ExecStart=/home/<username>/server/.venv/bin/uvicorn main:app \
     --host 0.0.0.0 --port 443 \
@@ -152,6 +152,11 @@ Restart=always
 [Install]
 WantedBy=multi-user.target
 ```
+> [!TIP]
+> You will need to replace `<serverUser>` occurrences in `compiler_upload.sh`, `main.py` and `vex-server.service` with the user you are going to run the server on. Failure to set the right user, or misspelling the user will result in various errors from the systemd service.
+
+> [!CAUTION]
+> Running the server on an account with `Super User Do` permissions (otherwise refered to as `sudo`) will open your Raspberry Pi, all connected devices, and the WiFi network powering it to a large security vulnerablity that could result in a malicous actor gaining access to any and all network traffic, allowing said actor to intercept bank information, emails, usernames and passwords, etc. To prevent against this: **DO NOT** use `root` or an account with `sudo` to replace `<serverUser>` occurrences.
 
 6. Start the service:
 ```bash
