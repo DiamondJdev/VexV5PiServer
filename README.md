@@ -16,7 +16,7 @@ Remotely upload and execute VEX V5 code from anywhere using a **Raspberry Pi 4**
 ## 📖 Table of Contents
 
 1. [🔧 Setup Overview](#-setup-overview)
-2. [🧰 Suggested Use Cases ](#suggested-use-cases)
+2. [🧰 Suggested Use Cases](#-real-world-use-cases)
 3. [🚀 Flashing the Pi](#-flashing-the-pi)
 4. [🛠️ First Boot & SSH Access](#️-first-boot--ssh-access)
 5. [🌐 Installing the Server](#-installing-the-server)
