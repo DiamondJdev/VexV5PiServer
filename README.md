@@ -2,8 +2,6 @@
 
 Remotely upload and execute VEX V5 code from anywhere using a **Raspberry Pi 4** as a secure USB bridge to the VEX Brain. This project sets up a headless Pi server that allows authenticated users to upload `.cpp` files, compile them using PROS, and flash them directly to the brain — all over Wi-Fi! 🛰️
 
----
-
 ## 📦 Materials Needed
 
 | Component        | Recommended Model                        | Notes                                   |
@@ -14,8 +12,6 @@ Remotely upload and execute VEX V5 code from anywhere using a **Raspberry Pi 4**
 | USB-A to USB-C   | Official VEX programming cable           | For connecting Pi → VEX V5 Brain        |
 | Computer         | Any SSH-capable device (Windows/Linux/Mac) | Used to SSH into the Pi and send commands |
 | Wi-Fi Connection | Stable 2.4GHz or 5GHz                    | Headless Pi requires network access     |
-
----
 
 ## 📖 Table of Contents
 
@@ -29,19 +25,13 @@ Remotely upload and execute VEX V5 code from anywhere using a **Raspberry Pi 4**
 8. [📬 Contact](#-contact)
 9. [💸 Donate](#-donate)
 
----
-
 ## 🔧 Setup Overview
 
 This project installs a **FastAPI Python server** on your Pi, which listens for upload requests and flashes VEX code using PROS. It runs on a port of your choosing (see [Chapter 4](#-installing-the-server)) and uses SSH and HTTPS for encrypted communication.
 > This guide covers a broad, barebones install made to help beginners setup a Raspberry Pi SSH Server and connect to it using RAS Key-pair authentication. 
 
----
-
 ## 🧰 Real-World Use-Cases
-Personally, 719R uses this software to enable programmers to work remotely and patch small issues or even large updates to the bot from their home setups, enabling the bot to live permanently with the driver or builders. Simultaniously decreasing the impact conflicting schedules can have on a team, while maximizing the amount of time everyone on the team gets with the robot. 
-
----
+At 719Rip, this software is used to bridge the gap between builders and programmers (literally). Using Pi Bridge, the robot can stay full-time with the driver or builders, giving them uninterrupted access for testing and tuning. If an issue arises, they can simply call a programmer, who can push an updated version of the code from anywhere, practically as fast as they can write it. This removes the bottlenecks traditionally caused by conflicting schedules and physical handoffs. Every moment with the robot counts, and Pi Bridge ensures that all team members, regardless of availability, can make the most of that time.
 
 ## 🚀 Flashing the Pi
 
@@ -63,7 +53,7 @@ Personally, 719R uses this software to enable programmers to work remotely and p
 6. Eject the storage and insert it into the Raspberry Pi.  
    > ⚠️ **Do not power on the Pi before inserting the storage device.**
 
----
+
 
 ## 🛠️ First Boot & SSH Access
 
@@ -102,8 +92,6 @@ ssh <username>@<Pi-IP>
 ```
 
 ✅ You’re now connected. Time to set up the server!
-
----
 
 ## 🌐 Installing the Server
 
@@ -171,22 +159,16 @@ sudo systemctl enable vex-server
 sudo systemctl start vex-server
 ```
 
----
-
 ## 📡 Using the Server
-
-
-
-
 <details>
 
 <summary>🟩 PowerShell Commands</summary>
 
-#### 🔼 Upload a Single <code>.cpp</code> File
+#### 🔼 Upload a Single `.cpp` File
 ```powershell
 curl.exe -F "file=@main.cpp" https://<pi-ip>:8080/upload --insecure
 ```
-#### 📁 Upload a <code>.zip</code> Project
+#### 📁 Upload a `.zip` Project
 
 ```powershell
 curl.exe -F "file=@test.zip" https://<pi-ip>:8080/upload_project --insecure
@@ -203,7 +185,7 @@ curl.exe -F "project=VexProject25" -F "path=src/main.cpp" -F "file=@main.cpp" `
 
 > ℹ️ This triggers a `pros make` build after upload to ensure the program will still run. If it fails, the server wil still accept the file and integrate it into the project, but notifies you that the build failed and the program will not run.
 
-#### ⚙️ Compile a <code>.cpp</code> File
+#### ⚙️ Compile a `.cpp` File
 ```powershell
 
 $headers = @{ "Content-Type" = "application/json" }
@@ -213,7 +195,7 @@ $body = '{"filename":"main.cpp"}'
 Invoke-RestMethod -Uri https://<pi-ip>:8080/compile -Method POST -Headers $headers -Body $body -SkipCertificateCheck
 
 ```
-#### 🛠 Compile or Upload a <code>.zip</code> Project
+#### 🛠 Compile or Upload a `.zip` Project
 ```powershell
 
 $headers = @{ "Content-Type" = "application/json" }
@@ -233,7 +215,7 @@ $body = '{"filename":"main.cpp"}'
 Invoke-RestMethod -Uri https://<pi-ip>:8080/upload_code -Method POST -Headers $headers -Body $body -SkipCertificateCheck
 
 ```
-> ➡️ **Tip:** Change `"mode":"compile"` to `"upload"` to upload instead.
+> ➡️ **Tip:** Change `"mode":"compile"` to `"mode":"upload"` to upload instead.
 
 #### 📜 View Compilation Logs
 
@@ -246,13 +228,13 @@ curl.exe https://<pi-ip>:8080/logs/<logfile.log> --insecure
 <details>
 <summary>🟦 Command Prompt (CMD) Commands</summary>
 
-#### 🔼 Upload a Single <code>.cpp</code> File
+#### 🔼 Upload a Single `.cpp` File
 ```cmd
 
 curl -F "file=@main.cpp" https://<pi-ip>:8080/upload --insecure
 
 ```
-#### 📁 Upload a <code>.zip</code> Project
+#### 📁 Upload a `.zip` Project
 ```cmd
 
 curl -F "file=@test.zip" https://<pi-ip>:8080/upload_project --insecure
@@ -276,11 +258,11 @@ curl.exe -F "project=VexProject25" -F "path=src/main.cpp" -F "file=@main.cpp" ^
 
 > ℹ️ This triggers a `pros make` build after upload. If it fails, the server still accepts the file, but notifies you that the build failed.
 
-#### ⚙️ Compile a <code>.cpp</code> File
+#### ⚙️ Compile a `.cpp` File
 ```cmd
 curl -X POST -H "Content-Type: application/json" -d "{\"filename\":\"main.cpp\"}" https://<pi-ip>:8080/compile --insecure
 ```
-#### 🛠 Compile or Upload a <code>.zip</code> Project
+#### 🛠 Compile or Upload a `.zip` Project
 ```cmd
 curl -X POST -H "Content-Type: application/json" -d "{\"filename\":\"test.zip\",\"mode\":\"compile\"}" https://<pi-ip>:8080/run --insecure
 ```
@@ -288,7 +270,7 @@ curl -X POST -H "Content-Type: application/json" -d "{\"filename\":\"test.zip\",
 ```cmd
 curl -X POST -H "Content-Type: application/json" -d "{\"filename\":\"main.cpp\"}" https://<pi-ip>:8080/upload_code --insecure
 ```
-> ➡️ **Tip:** Change `"mode":"compile"` to `"upload"` to upload instead.
+> ➡️ **Tip:** Change `"mode":"compile"` to `"mode":"upload"` to upload instead.
 #### 📜 View Compilation Logs
 ```cmd
 curl https://<pi-ip>:8080/logs/<logfile.log> --insecure
@@ -306,7 +288,6 @@ curl https://<pi-ip>:8080/logs/<logfile.log> --insecure
 | ❌ SSH not working               | Check `sshd` status or ensure network connectivity                   |
 | ❌ PROS upload fails             | Make sure VEX Brain is USB-connected and `pros upload` works manually|
 
----
 
 ## 📬 Contact
 
@@ -316,7 +297,6 @@ Questions? Bugs? Feature requests?
 - 📧 Email: diamondjdev@gmail.com
 - 💬 Discord: `apx_diamond86`
 
----
 
 ## 💸 Donate
 
