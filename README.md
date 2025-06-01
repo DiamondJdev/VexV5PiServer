@@ -195,7 +195,7 @@ curl.exe -F "project=VexProject25" -F "path=src/main.cpp" -F "file=@main.cpp" `
 - `path`: Relative path in project to replace (e.g., `src/main.cpp`)
 - `file`: The file to upload and replace
 
-> ℹ️ This triggers a `pros make` build after upload. If it fails, the server still accepts the file, but notifies you that the build failed.
+> ℹ️ This triggers a `pros make` build after upload to ensure the program will still run. If it fails, the server wil still accept the file and integrate it into the project, but notifies you that the build failed and the program will not run.
 
 #### ⚙️ Compile a <code>.cpp</code> File
 ```powershell
