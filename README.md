@@ -20,13 +20,14 @@ Remotely upload and execute VEX V5 code from anywhere using a **Raspberry Pi 4**
 ## 📖 Table of Contents
 
 1. [🔧 Setup Overview](#-setup-overview)
-2. [🚀 Flashing the Pi](#-flashing-the-pi)
-3. [🛠️ First Boot & SSH Access](#️-first-boot--ssh-access)
-4. [🌐 Installing the Server](#-installing-the-server)
-5. [📡 Using the Server](#-using-the-server)
-6. [🐞 Troubleshooting](#-troubleshooting)
-7. [📬 Contact](#-contact)
-8. [💸 Donate](#-donate)
+2. [🧰 Suggested Use Cases ](#suggested-use-cases)
+3. [🚀 Flashing the Pi](#-flashing-the-pi)
+4. [🛠️ First Boot & SSH Access](#️-first-boot--ssh-access)
+5. [🌐 Installing the Server](#-installing-the-server)
+6. [📡 Using the Server](#-using-the-server)
+7. [🐞 Troubleshooting](#-troubleshooting)
+8. [📬 Contact](#-contact)
+9. [💸 Donate](#-donate)
 
 ---
 
@@ -34,6 +35,11 @@ Remotely upload and execute VEX V5 code from anywhere using a **Raspberry Pi 4**
 
 This project installs a **FastAPI Python server** on your Pi, which listens for upload requests and flashes VEX code using PROS. It runs on a port of your choosing (see [Chapter 4](#-installing-the-server)) and uses SSH and HTTPS for encrypted communication.
 > This guide covers a broad, barebones install made to help beginners setup a Raspberry Pi SSH Server and connect to it using RAS Key-pair authentication. 
+
+---
+
+## 🧰 Real-World Use-Cases
+Personally, 719R uses this software to enable programmers to work remotely and patch small issues or even large updates to the bot from their home setups, enabling the bot to live permanently with the driver or builders. Simultaniously decreasing the impact conflicting schedules can have on a team, while maximizing the amount of time everyone on the team gets with the robot. 
 
 ---
 
