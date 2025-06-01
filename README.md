@@ -58,7 +58,9 @@ At 719Rip, this software is used to bridge the gap between builders and programm
 ## 🛠️ First Boot & SSH Access
 
 1. Boot the Pi and wait for it to initialize (headless OS means **no GUI**, only terminal).
-2. Determine the Pi’s IP address (via router, `ping raspberrypi.local`, etc.).
+2. Determine the Pi’s IP address (via router, `ping raspberrypi.local`, etc.)
+> [!NOTE]
+> if the Pi's address looks like `127.0.0.1` the pi is NOT connected to WiFI. Run `sudo raspi-config` and press the `enter` key twice. Then enter the WiFi's SSID and Password. You should now be connected to the WiFi network, run `logout` to return to the login screen and view the IP address at the top of the page. 
 3. From your main machine:
 
 ### 🔑 If using password-based SSH:
@@ -277,17 +279,20 @@ curl https://<pi-ip>:8080/logs/<logfile.log> --insecure
 ```
 </details>
 
-
 ## 🐞 Troubleshooting
 
-| Problem                          | Fix                                                                 |
-|----------------------------------|----------------------------------------------------------------------|
-| ❌ Permission denied on cert     | Ensure `.key` file is readable by the service user (`chmod 600`)     |
-| ❌ Empty reply from server       | Confirm `uvicorn` is running and routes are defined                  |
-| ❌ Systemd service won't start   | Run `sudo journalctl -u vex-server -n 50` for logs                   |
-| ❌ SSH not working               | Check `sshd` status or ensure network connectivity                   |
-| ❌ PROS upload fails             | Make sure VEX Brain is USB-connected and `pros upload` works manually|
-
+| Problem                           | Fix                                                                                             |
+|-----------------------------------|-------------------------------------------------------------------------------------------------|
+| ❌ **Permission denied on cert**     | Ensure the `.key` file is readable by the service user. Run `sudo chmod 600 <file>` and ensure ownership is correct (`chown`). |
+| ❌ **Empty reply from server**      | Confirm `uvicorn` is running (`sudo systemctl status vex-server`). Also check port/firewall settings and that your IP is correct. |
+| ❌ **Systemd service won't start**  | Run `sudo journalctl -u vex-server -n 50` to see logs. Look for file path errors, permission issues, or missing Python dependencies. |
+| ❌ **Upload fails despite file existing** | Verify file path casing and spacing (especially on Windows), and check if the file was saved in the `uploads/` directory. |
+| ❌ **SSH not working**              | Ensure SSH was enabled during Pi setup. Run `sudo systemctl status ssh`, and confirm your public key is in `/home/<user>/.ssh/authorized_keys`. |
+| ❌ **PROS upload fails**           | Ensure the VEX Brain is USB-connected. Run `pros upload` manually first to confirm it works. Check if the udev rules for PROS are installed. |
+| ❌ **`pros` not found in service** | When using `systemd`, ensure `/usr/local/bin` (or wherever `pros` is installed) is in the `PATH`. Modify the service file's `Environment=` or use full path `/usr/local/bin/pros`. |
+| ❌ **Build fails after replacing a file** | Even if the build fails, your upload succeeds. Check logs in the `logs/` directory for compilation errors and fix your code. |
+| ❌ **ZIP uploads don’t compile**   | Ensure the project structure inside the zip is a valid PROS project, not just a loose `src/`. The top-level directory must contain `project.pros`. |
+| ❌ **`curl` gives JSON or syntax error (Windows)** | Use escaped quotes with `curl.exe` in CMD/PowerShell: `curl.exe -X POST -H "Content-Type: application/json" -d "{\"filename\": \"main.cpp\"}" ...` |
 
 ## 📬 Contact
 
@@ -302,11 +307,11 @@ Questions? Bugs? Feature requests?
 
 Love this project? Want to support future features like:
 
-- Web UI with upload drag-and-drop
+- Web UI with uploading and Brain telemetry stats
 - VS Code + PROS extensions
-- Real-time Brain telemetry via WebSocket?
+- Remote Autonmous and skills runs w/ cameras
 
-> [🚧 Donation page coming soon — stay tuned!]
+> 🚧 Donation page coming soon — stay tuned!
 
 ---
 
