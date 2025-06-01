@@ -161,6 +161,45 @@ sudo systemctl enable vex-server
 sudo systemctl start vex-server
 ```
 
+## 🌐 Secure Remote Access with Tailscale
+
+Tailscale allows your Pi to join a private, encrypted network that works from anywhere — without port forwarding, public IPs, or opening up your network to risk.
+> [!NOTE]
+> After configuring Tailscale, `<pi-ip>` will not longer be used. Instead, `<pi-tailscale-ip>` will be used instead, ensuring access whether cohnnected to the same WiFi network
+> or not.
+
+### 🔐 Install & Authenticate Tailscale on the Pi
+
+1. **Install Tailscale:**
+   ```bash
+   curl -fsSL https://tailscale.com/install.sh | sh
+   ```
+
+2. **Start the Tailscale service:**
+   ```bash
+   sudo tailscale up
+   ```
+
+3. **Authenticate:**
+   - A login URL will appear in the terminal.
+   - Visit the URL from a browser (you’ll need a Tailscale account — free for personal use).
+   - Authorize the device to join your Tailscale network.
+
+4. **Verify connection:**
+   ```bash
+   tailscale status
+   ```
+   You’ll see the Pi’s Tailscale IP (usually `100.x.x.x`), which you can use to access the server as well as any other connected devices' Tailscale IPs. 
+
+### ✅ Benefits
+
+- 🔒 **No need to open ports or use port forwarding**
+- 🛡 **Fully encrypted and isolated virtual network**
+- 🌍 **Access from anywhere as long as both devices are online**
+- 📁 **Server file transfer and Public-Key authentication  functions remain intact** - no changes are needed to either 
+
+> 🧠 **Tip:** On your personal device, install Tailscale too so you can use `ssh <user>@<pi-tailscale-ip>` to interact with the server securely from any network.
+
 ## 📡 Using the Server
 <details>
 
@@ -168,17 +207,17 @@ sudo systemctl start vex-server
 
 #### 🔼 Upload a Single `.cpp` File
 ```powershell
-curl.exe -F "file=@main.cpp" https://<pi-ip>:8080/upload --insecure
+curl.exe -F "file=@main.cpp" https://<pi-tailscale-ip>:8080/upload --insecure
 ```
 #### 📁 Upload a `.zip` Project
 
 ```powershell
-curl.exe -F "file=@test.zip" https://<pi-ip>:8080/upload_project --insecure
+curl.exe -F "file=@test.zip" https://<pi-tailscale-ip>:8080/upload_project --insecure
 ```
 #### 🔧 Replace a file in an existing project:
 ```powershell
 curl.exe -F "project=VexProject25" -F "path=src/main.cpp" -F "file=@main.cpp" `
-  https://<pi-ip>:8080/update_file --insecure
+  https://<pi-tailscale-ip>:8080/update_file --insecure
 ```
 
 - `project`: Name of the existing project directory
@@ -194,7 +233,7 @@ $headers = @{ "Content-Type" = "application/json" }
 
 $body = '{"filename":"main.cpp"}'
 
-Invoke-RestMethod -Uri https://<pi-ip>:8080/compile -Method POST -Headers $headers -Body $body -SkipCertificateCheck
+Invoke-RestMethod -Uri https://<pi-tailscale-ip>:8080/compile -Method POST -Headers $headers -Body $body -SkipCertificateCheck
 
 ```
 #### 🛠 Compile or Upload a `.zip` Project
@@ -204,7 +243,7 @@ $headers = @{ "Content-Type" = "application/json" }
 
 $body = '{"filename":"test.zip","mode":"compile"}'
 
-Invoke-RestMethod -Uri https://<pi-ip>:8080/run -Method POST -Headers $headers -Body $body -SkipCertificateCheck
+Invoke-RestMethod -Uri https://<pi-tailscale-ip>:8080/run -Method POST -Headers $headers -Body $body -SkipCertificateCheck
 
 ```
 #### 🚀 Upload Code to Brain
@@ -214,7 +253,7 @@ $headers = @{ "Content-Type" = "application/json" }
 
 $body = '{"filename":"main.cpp"}'
 
-Invoke-RestMethod -Uri https://<pi-ip>:8080/upload_code -Method POST -Headers $headers -Body $body -SkipCertificateCheck
+Invoke-RestMethod -Uri https://<pi-tailscale-ip>:8080/upload_code -Method POST -Headers $headers -Body $body -SkipCertificateCheck
 
 ```
 > ➡️ **Tip:** Change `"mode":"compile"` to `"mode":"upload"` to upload instead.
@@ -223,7 +262,7 @@ Invoke-RestMethod -Uri https://<pi-ip>:8080/upload_code -Method POST -Headers $h
 
 ```powershell
 
-curl.exe https://<pi-ip>:8080/logs/<logfile.log> --insecure
+curl.exe https://<pi-tailscale-ip>:8080/logs/<logfile.log> --insecure
 
 ```
 </details>
@@ -233,25 +272,25 @@ curl.exe https://<pi-ip>:8080/logs/<logfile.log> --insecure
 #### 🔼 Upload a Single `.cpp` File
 ```cmd
 
-curl -F "file=@main.cpp" https://<pi-ip>:8080/upload --insecure
+curl -F "file=@main.cpp" https://<pi-tailscale-ip>:8080/upload --insecure
 
 ```
 #### 📁 Upload a `.zip` Project
 ```cmd
 
-curl -F "file=@test.zip" https://<pi-ip>:8080/upload_project --insecure
+curl -F "file=@test.zip" https://<pi-tailscale-ip>:8080/upload_project --insecure
 ### Replace a file in an existing project:
 
 #### 🔧 Command Prompt
 ```cmd
 curl.exe -F "project=VexProject25" -F "path=src/main.cpp" -F "file=@main.cpp" ^
-  https://<pi-ip>:8080/update_file --insecure
+  https://<pi-tailscale-ip>:8080/update_file --insecure
 ```
 
 #### 🔧 Replace a file in an existing project:
 ```cmd
 curl.exe -F "project=VexProject25" -F "path=src/main.cpp" -F "file=@main.cpp" ^
-  https://<pi-ip>:8080/update_file --insecure
+  https://<pi-tailscale-ip>:8080/update_file --insecure
 ```
 
 - `project`: Name of the existing project directory
@@ -262,20 +301,20 @@ curl.exe -F "project=VexProject25" -F "path=src/main.cpp" -F "file=@main.cpp" ^
 
 #### ⚙️ Compile a `.cpp` File
 ```cmd
-curl -X POST -H "Content-Type: application/json" -d "{\"filename\":\"main.cpp\"}" https://<pi-ip>:8080/compile --insecure
+curl -X POST -H "Content-Type: application/json" -d "{\"filename\":\"main.cpp\"}" https://<pi-tailscale-ip>:8080/compile --insecure
 ```
 #### 🛠 Compile or Upload a `.zip` Project
 ```cmd
-curl -X POST -H "Content-Type: application/json" -d "{\"filename\":\"test.zip\",\"mode\":\"compile\"}" https://<pi-ip>:8080/run --insecure
+curl -X POST -H "Content-Type: application/json" -d "{\"filename\":\"test.zip\",\"mode\":\"compile\"}" https://<pi-tailscale-ip>:8080/run --insecure
 ```
 #### 🚀 Upload Code to Brain
 ```cmd
-curl -X POST -H "Content-Type: application/json" -d "{\"filename\":\"main.cpp\"}" https://<pi-ip>:8080/upload_code --insecure
+curl -X POST -H "Content-Type: application/json" -d "{\"filename\":\"main.cpp\"}" https://<pi-tailscale-ip>:8080/upload_code --insecure
 ```
 > ➡️ **Tip:** Change `"mode":"compile"` to `"mode":"upload"` to upload instead.
 #### 📜 View Compilation Logs
 ```cmd
-curl https://<pi-ip>:8080/logs/<logfile.log> --insecure
+curl https://<pi-tailscale-ip>:8080/logs/<logfile.log> --insecure
 ```
 </details>
 
