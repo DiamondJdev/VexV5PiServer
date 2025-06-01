@@ -199,7 +199,8 @@ Tailscale allows your Pi to join a private, encrypted network that works from an
 - 🌍 **Access from anywhere as long as both devices are online**
 - 📁 **Server file transfer and Public-Key authentication  functions remain intact** - no changes are needed to either 
 
-> 🧠 **Tip:** On your personal device, install Tailscale too so you can use `ssh <user>@<pi-tailscale-ip>` to interact with the server securely from any network.
+> [!TIP] 
+> On your personal device, install Tailscale too so you can use `ssh <user>@<pi-tailscale-ip>` to interact with the server securely from any network.
 
 ## 📡 Using the Server
 <details>
