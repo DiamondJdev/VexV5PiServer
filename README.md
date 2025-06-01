@@ -20,6 +20,7 @@ Remotely upload and execute VEX V5 code from anywhere using a **Raspberry Pi 4**
 3. [🚀 Flashing the Pi](#-flashing-the-pi)
 4. [🛠️ First Boot & SSH Access](#️-first-boot--ssh-access)
 5. [🖧 Installing the Server](#-installing-the-server)
+6. [🌐 Secure remote access feat. Tailscale](#-secure-remote-access-with-tailscale)
 6. [📡 Using the Server](#-using-the-server)
 7. [🐞 Troubleshooting](#-troubleshooting)
 8. [📬 Contact](#-contact)
