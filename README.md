@@ -6,12 +6,12 @@ Remotely upload and execute VEX V5 code from anywhere using a **Raspberry Pi 4**
 
 | Component        | Recommended Model                        | Notes                                   |
 |------------------|------------------------------------------|-----------------------------------------|
-| Raspberry Pi     | Pi 4 (2GB RAM or higher)                 | Must be 64-bit capable                  |
-| MicroSD Card     | 16GB+ Class 10                           | Use Raspberry Pi Imager to flash OS     |
+| Raspberry Pi     | Pi 4 (2GB RAM or higher)                 | MUST be 64-bit capable                  |
+| MicroSD Card     | 32GB+ MicroSD card                       | Size will dictate size of projects stored |
 | Power Supply     | Official Pi 4 PSU                        | 5V/3A recommended                        |
-| USB-A to USB-C   | Official VEX programming cable           | For connecting Pi → VEX V5 Brain        |
-| Computer         | Any SSH-capable device (Windows/Linux/Mac) | Used to SSH into the Pi and send commands |
-| Wi-Fi Connection | Stable 2.4GHz or 5GHz                    | Headless Pi requires network access     |
+| USB-A to USB-C   | USB A to USB C cable                     | For connecting Pi → VEX V5 Brain        |
+| Computer         | Any SSH-capable, internet connected computer| Used to SSH into the Pi and send commands |
+| Wi-Fi Connection | Stable 2.4GHz or 5GHz                    | Pi will require network access     |
 
 ## 📖 Table of Contents
 
@@ -19,7 +19,7 @@ Remotely upload and execute VEX V5 code from anywhere using a **Raspberry Pi 4**
 2. [🧰 Suggested Use Cases](#-real-world-use-cases)
 3. [🚀 Flashing the Pi](#-flashing-the-pi)
 4. [🛠️ First Boot & SSH Access](#️-first-boot--ssh-access)
-5. [🌐 Installing the Server](#-installing-the-server)
+5. [🖧 Installing the Server](#-installing-the-server)
 6. [📡 Using the Server](#-using-the-server)
 7. [🐞 Troubleshooting](#-troubleshooting)
 8. [📬 Contact](#-contact)
@@ -93,9 +93,9 @@ Once copied:
 ssh <username>@<Pi-IP>
 ```
 
-✅ You’re now connected. Time to set up the server!
+✅ You’re now connected to the Pi on your local network. Time to set up the server!
 
-## 🌐 Installing the Server
+## 🖧 Installing the Server
 
 1. Update and install required packages:
 ```bash
