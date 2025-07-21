@@ -341,7 +341,7 @@ Questions? Bugs? Feature requests?
 - Discord: `apx_diamond86`
 
 
-## Donate
+## Contribute
 
 Love this project? Want to support future features like:
 
@@ -349,7 +349,7 @@ Love this project? Want to support future features like:
 - VS Code + PROS extensions
 - Remote Autonmous and skills runs w/ cameras
 
-> Donation page coming soon — stay tuned!
+Feel free to fork this repository and contribute or shoot me an email to chat about it! 
 
 ---
 
