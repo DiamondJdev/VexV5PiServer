@@ -54,7 +54,7 @@
   "include": [
     "src/**/*",
     ".next/types/**/*.ts"
-  ],
+, "app/api/server.js", "app"  ],
   "exclude": [
     "node_modules",
     "dist",
