@@ -1,8 +1,8 @@
-# 🤖 VEX Remote Code Upload Server (Pi Bridge)
+# VEX Remote Code Upload Server (Pi Bridge)
 
-Remotely upload and execute VEX V5 code from anywhere using a **Raspberry Pi 4** as a secure USB bridge to the VEX Brain. This project sets up a headless Pi server that allows authenticated users to upload `.cpp` files, compile them using PROS, and flash them directly to the brain — all over Wi-Fi! 🛰️
+Remotely upload and execute VEX V5 code from anywhere using a **Raspberry Pi 4** as a secure USB bridge to the VEX Brain. This project sets up a headless Pi server that allows authenticated users to upload `.cpp` files, compile them using PROS, and flash them directly to the brain — all over Wi-Fi!
 
-## 📦 Materials Needed
+## Materials Needed
 
 | Component        | Recommended Model                        | Notes                                   |
 |------------------|------------------------------------------|-----------------------------------------|
@@ -13,50 +13,50 @@ Remotely upload and execute VEX V5 code from anywhere using a **Raspberry Pi 4**
 | Computer         | Any SSH-capable, internet connected computer| Used to SSH into the Pi and send commands |
 | Wi-Fi Connection | Stable 2.4GHz or 5GHz                    | Pi will require network access     |
 
-## 📖 Table of Contents
+## Table of Contents
 
-1. [🔧 Setup Overview](#-setup-overview)
-2. [🧰 Suggested Use Cases](#-real-world-use-cases)
-3. [🚀 Flashing the Pi](#-flashing-the-pi)
-4. [🛠️ First Boot & SSH Access](#️-first-boot--ssh-access)
-5. [🖧 Installing the Server](#-installing-the-server)
-6. [🌐 Secure remote access feat. Tailscale](#-secure-remote-access-with-tailscale)
-6. [📡 Using the Server](#-using-the-server)
-7. [🐞 Troubleshooting](#-troubleshooting)
-8. [📬 Contact](#-contact)
-9. [💸 Donate](#-donate)
+1. [Setup Overview](#-setup-overview)
+2. [Suggested Use Cases](#-real-world-use-cases)
+3. [Flashing the Pi](#-flashing-the-pi)
+4. [First Boot & SSH Access](#-first-boot--ssh-access)
+5. [Installing the Server](#-installing-the-server)
+6. [Secure remote access feat. Tailscale](#-secure-remote-access-with-tailscale)
+6. [Using the Server](#-using-the-server)
+7. [Troubleshooting](#-troubleshooting)
+8. [Contact](#-contact)
+9. [Donate](#-donate)
 
-## 🔧 Setup Overview
+## Setup Overview
 
 This project installs a **FastAPI Python server** on your Pi, which listens for upload requests and flashes VEX code using PROS. It runs on a port of your choosing (see [Chapter 4](#-installing-the-server)) and uses SSH and HTTPS for encrypted communication.
 > This guide covers a broad, barebones install made to help beginners setup a Raspberry Pi SSH Server and connect to it using RAS Key-pair authentication. 
 
-## 🧰 Real-World Use-Cases
+## Real-World Use-Cases
 At 719Rip, this software is used to bridge the gap between builders and programmers (literally). Using Pi Bridge, the robot can stay full-time with the driver or builders, giving them uninterrupted access for testing and tuning. If an issue arises, they can simply call a programmer, who can push an updated version of the code from anywhere, practically as fast as they can write it. This removes the bottlenecks traditionally caused by conflicting schedules and physical handoffs. Every moment with the robot counts, and Pi Bridge ensures that all team members, regardless of availability, can make the most of that time.
 
-## 🚀 Flashing the Pi
+## Flashing the Pi
 
-1. 🔗 Download the [Raspberry Pi Imager](https://www.raspberrypi.com/software/)
+1. Download the [Raspberry Pi Imager](https://www.raspberrypi.com/software/)
 2. Select:
    - **Device**: Raspberry Pi 4
    - **OS**: Raspberry Pi OS Lite (64-bit)
    - **Storage**: MicroSD card, USB drive, or NVMe M.2 (compatibility depends on your Pi model)
    - Click **Next**
-3. 📂 In **OS Customization Settings**, click **Edit Settings** and configure:
+3. In **OS Customization Settings**, click **Edit Settings** and configure:
    - Hostname, username, password
    - Wi-Fi SSID and password  
-   > ⚠️ **Important:** This will be your only access method. Forgetting the username or password will require re-flashing the Pi.
+   > **Important:** This will be your only access method. Forgetting the username or password will require re-flashing the Pi.
 4. Under the **Services** tab:
    - Enable **SSH**
    - Choose **Public-key authentication** (recommended) or **password authentication**
-   > 🔐 **Note:** Public-key authentication is more secure and will be used throughout this guide. Password login is easier for beginners.
+   > **Note:** Public-key authentication is more secure and will be used throughout this guide. Password login is easier for beginners.
 5. Click **Run SSH-Keygen** if using keys, then finish imaging.
 6. Eject the storage and insert it into the Raspberry Pi.  
-   > ⚠️ **Do not power on the Pi before inserting the storage device.**
+   > **Do not power on the Pi before inserting the storage device.**
 
 
 
-## 🛠️ First Boot & SSH Access
+## First Boot & SSH Access
 
 1. Boot the Pi and wait for it to initialize (headless OS means **no GUI**, only terminal).
 2. Determine the Pi’s IP address (via router, `ping raspberrypi.local`, etc.)
@@ -64,7 +64,7 @@ At 719Rip, this software is used to bridge the gap between builders and programm
 > if the Pi's address looks like `127.0.0.1` the pi is NOT connected to WiFI. Run `sudo raspi-config` and press the `enter` key twice. Then enter the WiFi's SSID and Password. You should now be connected to the WiFi network, run `logout` to return to the login screen and view the IP address at the top of the page. 
 3. From your main machine:
 
-### 🔑 If using password-based SSH:
+### If using password-based SSH:
 ```bash
 ssh <username>@<Pi-IP>
 ```
@@ -72,7 +72,7 @@ ssh <username>@<Pi-IP>
 - Accept the fingerprint
 - Enter your password
 
-### 🔐 If using public-key authentication:
+### If using public-key authentication:
 On your Raspberry Pi:
 ```bash
 eval "$(ssh-agent -s)" 
@@ -96,7 +96,7 @@ ssh <username>@<Pi-IP>
 
 ✅ You’re now connected to the Pi on your local network. Time to set up the server!
 
-## 🖧 Installing the Server
+## Installing the Server
 
 1. Update and install required packages:
 ```bash
@@ -162,14 +162,14 @@ sudo systemctl enable vex-server
 sudo systemctl start vex-server
 ```
 
-## 🌐 Secure Remote Access with Tailscale
+## Secure Remote Access with Tailscale
 
 Tailscale allows your Pi to join a private, encrypted network that works from anywhere — without port forwarding, public IPs, or opening up your network to risk.
 > [!NOTE]
 > After configuring Tailscale, `<pi-ip>` will not longer be used. Instead, `<pi-tailscale-ip>` will be used instead, ensuring access whether cohnnected to the same WiFi network
 > or not.
 
-### 🔐 Install & Authenticate Tailscale on the Pi
+### Install & Authenticate Tailscale on the Pi
 
 1. **Install Tailscale:**
    ```bash
@@ -192,31 +192,31 @@ Tailscale allows your Pi to join a private, encrypted network that works from an
    ```
    You’ll see the Pi’s Tailscale IP (usually `100.x.x.x`), which you can use to access the server as well as any other connected devices' Tailscale IPs. 
 
-### ✅ Benefits
+### Benefits
 
-- 🔒 **No need to open ports or use port forwarding**
-- 🛡 **Fully encrypted and isolated virtual network**
-- 🌍 **Access from anywhere as long as both devices are online**
-- 📁 **Server file transfer and Public-Key authentication  functions remain intact** - no changes are needed to either 
+- **No need to open ports or use port forwarding**
+- **Fully encrypted and isolated virtual network**
+- **Access from anywhere as long as both devices are online**
+- **Server file transfer and Public-Key authentication  functions remain intact** - no changes are needed to either 
 
 > [!IMPORTANT] 
 > On your personal device, install Tailscale too so you can use `ssh <user>@<pi-tailscale-ip>` to interact with the server securely from any network.
 
-## 📡 Using the Server
+## Using the Server
 <details>
 
-<summary>🟩 PowerShell Commands</summary>
+<summary>PowerShell Commands</summary>
 
-#### 🔼 Upload a Single `.cpp` File
+#### Upload a Single `.cpp` File
 ```powershell
 curl.exe -F "file=@main.cpp" https://<pi-tailscale-ip>:8080/upload --insecure
 ```
-#### 📁 Upload a `.zip` Project
+#### Upload a `.zip` Project
 
 ```powershell
 curl.exe -F "file=@test.zip" https://<pi-tailscale-ip>:8080/upload_project --insecure
 ```
-#### 🔧 Replace a file in an existing project:
+#### Replace a file in an existing project:
 ```powershell
 curl.exe -F "project=VexProject25" -F "path=src/main.cpp" -F "file=@main.cpp" `
   https://<pi-tailscale-ip>:8080/update_file --insecure
@@ -226,9 +226,9 @@ curl.exe -F "project=VexProject25" -F "path=src/main.cpp" -F "file=@main.cpp" `
 - `path`: Relative path in project to replace (e.g., `src/main.cpp`)
 - `file`: The file to upload and replace
 
-> ℹ️ This triggers a `pros make` build after upload to ensure the program will still run. If it fails, the server wil still accept the file and integrate it into the project, but notifies you that the build failed and the program will not run.
+> This triggers a `pros make` build after upload to ensure the program will still run. If it fails, the server wil still accept the file and integrate it into the project, but notifies you that the build failed and the program will not run.
 
-#### ⚙️ Compile a `.cpp` File
+#### Compile a `.cpp` File
 ```powershell
 
 $headers = @{ "Content-Type" = "application/json" }
@@ -238,7 +238,7 @@ $body = '{"filename":"main.cpp"}'
 Invoke-RestMethod -Uri https://<pi-tailscale-ip>:8080/compile -Method POST -Headers $headers -Body $body -SkipCertificateCheck
 
 ```
-#### 🛠 Compile or Upload a `.zip` Project
+#### Compile or Upload a `.zip` Project
 ```powershell
 
 $headers = @{ "Content-Type" = "application/json" }
@@ -248,7 +248,7 @@ $body = '{"filename":"test.zip","mode":"compile"}'
 Invoke-RestMethod -Uri https://<pi-tailscale-ip>:8080/run -Method POST -Headers $headers -Body $body -SkipCertificateCheck
 
 ```
-#### 🚀 Upload Code to Brain
+#### Upload Code to Brain
 ```powershell
 
 $headers = @{ "Content-Type" = "application/json" }
@@ -258,38 +258,35 @@ $body = '{"filename":"main.cpp"}'
 Invoke-RestMethod -Uri https://<pi-tailscale-ip>:8080/upload_code -Method POST -Headers $headers -Body $body -SkipCertificateCheck
 
 ```
-> ➡️ **Tip:** Change `"mode":"compile"` to `"mode":"upload"` to upload instead.
+> **Tip:** Change `"mode":"compile"` to `"mode":"upload"` to upload instead.
 
-#### 📜 View Compilation Logs
+#### View Compilation Logs
 
 ```powershell
 
 curl.exe https://<pi-tailscale-ip>:8080/logs/<logfile.log> --insecure
 
 ```
-</details>
-<details>
-<summary>🟦 Command Prompt (CMD) Commands</summary>
 
-#### 🔼 Upload a Single `.cpp` File
+#### Upload a Single `.cpp` File
 ```cmd
 
 curl -F "file=@main.cpp" https://<pi-tailscale-ip>:8080/upload --insecure
 
 ```
-#### 📁 Upload a `.zip` Project
+#### Upload a `.zip` Project
 ```cmd
 
 curl -F "file=@test.zip" https://<pi-tailscale-ip>:8080/upload_project --insecure
 ### Replace a file in an existing project:
 
-#### 🔧 Command Prompt
+#### Command Prompt
 ```cmd
 curl.exe -F "project=VexProject25" -F "path=src/main.cpp" -F "file=@main.cpp" ^
   https://<pi-tailscale-ip>:8080/update_file --insecure
 ```
 
-#### 🔧 Replace a file in an existing project:
+#### Replace a file in an existing project:
 ```cmd
 curl.exe -F "project=VexProject25" -F "path=src/main.cpp" -F "file=@main.cpp" ^
   https://<pi-tailscale-ip>:8080/update_file --insecure
@@ -299,28 +296,28 @@ curl.exe -F "project=VexProject25" -F "path=src/main.cpp" -F "file=@main.cpp" ^
 - `path`: Relative path in project to replace (e.g., `src/main.cpp`)
 - `file`: The file to upload and replace
 
-> ℹ️ This triggers a `pros make` build after upload. If it fails, the server still accepts the file, but notifies you that the build failed.
+> This triggers a `pros make` build after upload. If it fails, the server still accepts the file, but notifies you that the build failed.
 
-#### ⚙️ Compile a `.cpp` File
+#### Compile a `.cpp` File
 ```cmd
 curl -X POST -H "Content-Type: application/json" -d "{\"filename\":\"main.cpp\"}" https://<pi-tailscale-ip>:8080/compile --insecure
 ```
-#### 🛠 Compile or Upload a `.zip` Project
+#### Compile or Upload a `.zip` Project
 ```cmd
 curl -X POST -H "Content-Type: application/json" -d "{\"filename\":\"test.zip\",\"mode\":\"compile\"}" https://<pi-tailscale-ip>:8080/run --insecure
 ```
-#### 🚀 Upload Code to Brain
+#### Upload Code to Brain
 ```cmd
 curl -X POST -H "Content-Type: application/json" -d "{\"filename\":\"main.cpp\"}" https://<pi-tailscale-ip>:8080/upload_code --insecure
 ```
-> ➡️ **Tip:** Change `"mode":"compile"` to `"mode":"upload"` to upload instead.
-#### 📜 View Compilation Logs
+> **Tip:** Change `"mode":"compile"` to `"mode":"upload"` to upload instead.
+#### View Compilation Logs
 ```cmd
 curl https://<pi-tailscale-ip>:8080/logs/<logfile.log> --insecure
 ```
 </details>
 
-## 🐞 Troubleshooting
+## Troubleshooting
 
 | Problem                           | Fix                                                                                             |
 |-----------------------------------|-------------------------------------------------------------------------------------------------|
@@ -335,16 +332,16 @@ curl https://<pi-tailscale-ip>:8080/logs/<logfile.log> --insecure
 | ❌ **ZIP uploads don’t compile**   | Ensure the project structure inside the zip is a valid PROS project, not just a loose `src/`. The top-level directory must contain `project.pros`. |
 | ❌ **`curl` gives JSON or syntax error (Windows)** | Use escaped quotes with `curl.exe` in CMD/PowerShell: `curl.exe -X POST -H "Content-Type: application/json" -d "{\"filename\": \"main.cpp\"}" ...` |
 
-## 📬 Contact
+## Contact
 
 Questions? Bugs? Feature requests?
 
-- 🛠 GitHub Issues: [Open an issue](https://github.com/DiamondJdev/VexV5PiServer/issues)
-- 📧 Email: diamondjdev@gmail.com
-- 💬 Discord: `apx_diamond86`
+- GitHub Issues: [Open an issue](https://github.com/DiamondJdev/VexV5PiServer/issues)
+- Email: diamondjdev@gmail.com
+- Discord: `apx_diamond86`
 
 
-## 💸 Donate
+## Contribute
 
 Love this project? Want to support future features like:
 
@@ -352,8 +349,8 @@ Love this project? Want to support future features like:
 - VS Code + PROS extensions
 - Remote Autonmous and skills runs w/ cameras
 
-> 🚧 Donation page coming soon — stay tuned!
+Feel free to fork this repository and contribute or shoot me an email to chat about it! 
 
 ---
 
-Built with 🧠, 🔧, and way too much ☕ by **@DiamondJdev | BWHS 719RIP**
+Built with way too much caffine by **@DiamondJdev | BWHS 719RIP**
